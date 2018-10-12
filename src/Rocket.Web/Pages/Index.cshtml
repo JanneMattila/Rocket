@@ -1,0 +1,30 @@
+﻿@page
+@model Rocket.Web.Pages.IndexModel
+@{
+    Layout = "_LayoutPlay";
+}
+<canvas id="canvas" width="800" height="800"></canvas>
+
+@section Scripts {
+    @*<script src="lib/signalr/signalr.js"></script>
+        <script src="lib/msgpack5/msgpack5.js"></script>
+        <script src="lib/signalr-protocol-msgpack/signalr-protocol-msgpack.js"></script>*@
+    @*<environment include="Development">*@
+    @*<script>
+            //var files = ["Player", "PlayerMetadataAction", "PlayerMetadata", "Point", "CanvasTouch", "Constants", "KeyCodes", "Shot", "Communication", "RocketView", "bootstrap"];
+            var files = ["Player", "PlayerMetadataAction", "PlayerMetadata", "CanvasTouch", "Constants", "KeyCodes", "Shot", "Communication"];
+            var cacheBust = Math.random().toString().substring(2);
+            for (var i = 0; i < files.length; i++) {
+                document.write('<script type="text/javascript" src="/js/' + files[i] + '.js?' + cacheBust + '"><\/script>');
+            }
+        </script>*@
+    @*<script src="lib/signalr/signalr.js"></script>
+    <script src="lib/msgpack5/msgpack5.js"></script>
+    <script src="lib/signalr-protocol-msgpack/signalr-protocol-msgpack.js"></script>*@
+    <script src="lib/requirejs/require.js" data-main="/js/Bootstrap"></script>
+    @*<script src="~/js/bootstrap.js"></script>*@
+    @*</environment>
+        <environment exclude="Development">
+            <script src="~/js/RocketView.min.js" asp-append-version="true"></script>
+        </environment>*@
+}

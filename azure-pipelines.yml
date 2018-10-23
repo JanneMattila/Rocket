@@ -9,6 +9,7 @@ pool:
 variables:
   buildConfiguration: 'Release'
 
+name: 1.0.$(Rev:r)
 steps:
 - script: dotnet build --configuration $(buildConfiguration)
   displayName: 'dotnet build $(buildConfiguration)'

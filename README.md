@@ -1,5 +1,7 @@
 # Instructions
 
+[![Build Status](https://jannemattila.visualstudio.com/jannemattila/_apis/build/status/JanneMattila.Rocket)](https://jannemattila.visualstudio.com/jannemattila/_build/latest?definitionId=31)
+
 ## Working with 'Rocket'
 
 ### How to create image locally

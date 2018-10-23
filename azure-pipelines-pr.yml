@@ -6,19 +6,7 @@
 pool:
   vmImage: 'Ubuntu 16.04'
 
-variables:
-  imageName: 'jannemattila/rocket'
-
-name: 1.0.$(Rev:r)
+name: PR-$(Rev:r)
 steps:
 - task: Docker@1
   displayName: 'Build an image'
-  inputs:
-    imageName: $(imageName)
-- task: Docker@1
-  displayName: 'Push an image'
-  inputs:
-    containerregistrytype: 'Container Registry'
-    dockerRegistryEndpoint: DockerHub
-    command: 'Push an image'
-    imageName: $(imageName)

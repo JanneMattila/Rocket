@@ -1,6 +1,6 @@
 # This Dockerfile contains Build and Release steps:
 # 1. Build image
-FROM microsoft/dotnet:2.1.403-sdk-alpine3.7 AS build
+FROM microsoft/dotnet:2.2.100-sdk-alpine3.8 AS build
 WORKDIR /source
 
 # Cache nuget restore
@@ -14,7 +14,7 @@ WORKDIR /source/Rocket.Web
 RUN dotnet publish Rocket.Web.csproj --output /app/ --configuration Release
 
 # 2. Release image
-FROM microsoft/dotnet:2.1.5-aspnetcore-runtime-alpine3.7
+FROM microsoft/dotnet:2.2.0-aspnetcore-runtime-alpine3.8
 WORKDIR /app
 EXPOSE 80
 

@@ -12,14 +12,27 @@ import { WorldConstants, MovementConstants, ShootingConstants, AnimationConstant
 
 // Fullscreen API fixes to Typescript files
 // based on this: https://developer.mozilla.org/en-US/docs/Web/API/Fullscreen_API
-export interface Document {
-    readonly mozFullscreenEnabled: boolean;
-    readonly mozFullscreenElement: Element | null;
-    mozExitFullscreen(): void;
+interface HTMLDocumentEx extends HTMLDocument {
+    mozFullscreenEnabled: boolean;
+    mozFullscreenElement: Element | null;
+    mozExitFullscreen: () => void | null;
+
+    webkitFullscreenEnabled: boolean;
+    webkitRequestFullscreen: boolean;
+    webkitFullscreenElement: Element | null;
+    webkitExitFullscreen: () => void | null;
+
+    fullscreenEnabled: boolean;
+    fullscreenElement: Element | null;
 }
 
-export interface Element {
+interface HTMLCanvasElementEx extends HTMLCanvasElement {
     mozRequestFullscreen(): void;
+
+    webkitFullscreenEnabled: boolean;
+    webkitRequestFullscreen: () => void | null;
+    webkitFullscreenElement: Element | null;
+    webkitExitFullscreen: () => void | null;
 }
 
 export class RocketView implements INetworkUpdate {
@@ -72,19 +85,14 @@ export class RocketView implements INetworkUpdate {
         if (x > this.canvas.width * 0.9 &&
             y < this.canvas.height * 0.1) {
 
-            //this.log("webkitFullscreenEnabled: " + document.webkitFullscreenEnabled);
-            //this.log("webkitFullscreenElement: " + document.webkitFullscreenElement);
-            //this.log("mozFullscreenEnabled: " + document.mozFullscreenEnabled);
-            //this.log("mozFullscreenElement: " + document.mozFullscreenElement);
-            //this.log("fullscreenEnabled: " + document.fullscreenEnabled);
-            //this.log("fullscreenElement: " + document.fullscreenElement);
-
-            if (document.webkitFullscreenEnabled) {
-                if (this.canvas.webkitRequestFullscreen) {
-                    if (document.webkitFullscreenElement == null) {
+            const d = <HTMLDocumentEx>document;
+            const element = <HTMLCanvasElementEx>this.canvas;
+            if (d.webkitFullscreenEnabled) {
+                if (element.webkitRequestFullscreen) {
+                    if (d.webkitFullscreenElement == null) {
                         this.log("canvas.webkitRequestFullscreen");
                         try {
-                            this.canvas.webkitRequestFullscreen();
+                            element.webkitRequestFullscreen();
                             this.log("canvas.webkitRequestFullscreen - OK!");
                         } catch (e) {
                             this.log("Error: " + e);
@@ -92,32 +100,32 @@ export class RocketView implements INetworkUpdate {
                         }
                     }
                     else {
-                        document.webkitExitFullscreen();
+                        d.webkitExitFullscreen();
                     }
                     return;
                 }
             }
-            //else if (document.mozFullscreenEnabled) {
-            //    if (this.canvas.mozRequestFullscreen) {
-            //        if (document.mozFullscreenElement == null) {
-            //            this.log("canvas.mozRequestFullscreen");
-            //            try {
-            //                this.canvas.mozRequestFullscreen();
-            //                this.log("canvas.mozRequestFullscreen - OK!");
-            //            } catch (e) {
-            //                this.log("Error: " + e);
-            //                this.log(e);
-            //            }
-            //        }
-            //        else {
-            //            document.mozExitFullscreen();
-            //        }
-            //        return;
-            //    }
-            //}
+            else if (d.mozFullscreenEnabled) {
+                if (element.mozRequestFullscreen) {
+                    if (d.mozFullscreenElement == null) {
+                        this.log("canvas.mozRequestFullscreen");
+                        try {
+                            element.mozRequestFullscreen();
+                            this.log("canvas.mozRequestFullscreen - OK!");
+                        } catch (e) {
+                            this.log("Error: " + e);
+                            this.log(e);
+                        }
+                    }
+                    else {
+                        d.mozExitFullscreen();
+                    }
+                    return;
+                }
+            }
             else if (document.fullscreenEnabled) {
                 if (this.canvas.requestFullscreen) {
-                    if (document.fullscreenElement == null) {
+                    if (d.fullscreenElement == null) {
                         this.canvas.requestFullscreen();
                     }
                     else {
@@ -180,8 +188,9 @@ export class RocketView implements INetworkUpdate {
 
         window.addEventListener('resize', () => {
             console.log("resize");
-            if (document.webkitFullscreenElement ||
-                document.fullscreenElement) {
+            const d = <HTMLDocumentEx>document;
+            if (d.webkitFullscreenElement ||
+                d.fullscreenElement) {
                 canvas.width = window.innerWidth;
                 canvas.height = window.innerHeight;
             }

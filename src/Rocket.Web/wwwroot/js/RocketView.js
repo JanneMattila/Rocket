@@ -46,18 +46,14 @@
         RocketView.prototype.processFullscreenRequest = function (x, y) {
             if (x > this.canvas.width * 0.9 &&
                 y < this.canvas.height * 0.1) {
-                //this.log("webkitFullscreenEnabled: " + document.webkitFullscreenEnabled);
-                //this.log("webkitFullscreenElement: " + document.webkitFullscreenElement);
-                //this.log("mozFullscreenEnabled: " + document.mozFullscreenEnabled);
-                //this.log("mozFullscreenElement: " + document.mozFullscreenElement);
-                //this.log("fullscreenEnabled: " + document.fullscreenEnabled);
-                //this.log("fullscreenElement: " + document.fullscreenElement);
-                if (document.webkitFullscreenEnabled) {
-                    if (this.canvas.webkitRequestFullscreen) {
-                        if (document.webkitFullscreenElement == null) {
+                var d = document;
+                var element = this.canvas;
+                if (d.webkitFullscreenEnabled) {
+                    if (element.webkitRequestFullscreen) {
+                        if (d.webkitFullscreenElement == null) {
                             this.log("canvas.webkitRequestFullscreen");
                             try {
-                                this.canvas.webkitRequestFullscreen();
+                                element.webkitRequestFullscreen();
                                 this.log("canvas.webkitRequestFullscreen - OK!");
                             }
                             catch (e) {
@@ -66,32 +62,33 @@
                             }
                         }
                         else {
-                            document.webkitExitFullscreen();
+                            d.webkitExitFullscreen();
                         }
                         return;
                     }
                 }
-                //else if (document.mozFullscreenEnabled) {
-                //    if (this.canvas.mozRequestFullscreen) {
-                //        if (document.mozFullscreenElement == null) {
-                //            this.log("canvas.mozRequestFullscreen");
-                //            try {
-                //                this.canvas.mozRequestFullscreen();
-                //                this.log("canvas.mozRequestFullscreen - OK!");
-                //            } catch (e) {
-                //                this.log("Error: " + e);
-                //                this.log(e);
-                //            }
-                //        }
-                //        else {
-                //            document.mozExitFullscreen();
-                //        }
-                //        return;
-                //    }
-                //}
+                else if (d.mozFullscreenEnabled) {
+                    if (element.mozRequestFullscreen) {
+                        if (d.mozFullscreenElement == null) {
+                            this.log("canvas.mozRequestFullscreen");
+                            try {
+                                element.mozRequestFullscreen();
+                                this.log("canvas.mozRequestFullscreen - OK!");
+                            }
+                            catch (e) {
+                                this.log("Error: " + e);
+                                this.log(e);
+                            }
+                        }
+                        else {
+                            d.mozExitFullscreen();
+                        }
+                        return;
+                    }
+                }
                 else if (document.fullscreenEnabled) {
                     if (this.canvas.requestFullscreen) {
-                        if (document.fullscreenElement == null) {
+                        if (d.fullscreenElement == null) {
                             this.canvas.requestFullscreen();
                         }
                         else {
@@ -147,8 +144,9 @@
             canvas.focus();
             window.addEventListener('resize', function () {
                 console.log("resize");
-                if (document.webkitFullscreenElement ||
-                    document.fullscreenElement) {
+                var d = document;
+                if (d.webkitFullscreenElement ||
+                    d.fullscreenElement) {
                     canvas.width = window.innerWidth;
                     canvas.height = window.innerHeight;
                 }

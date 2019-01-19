@@ -42,7 +42,12 @@ namespace Rocket.Web
             .AddMessagePackProtocol(options =>
             {
                 //options.FormatterResolvers
-            });
+            })
+#if DEBUG
+            // Add support for Azure SignalR Services
+            .AddAzureSignalR()
+#endif
+            ;
 
             services.AddLogging(loggingBuilder =>
             {
@@ -75,11 +80,19 @@ namespace Rocket.Web
 
             app.UseStaticFiles();
 
-            app.UseSignalR(routes =>
+#if DEBUG
+            // How to use Azure SignalR Service
+            app.UseAzureSignalR(routes =>
             {
-                HubRoutes = routes;
                 routes.MapHub<GameHub>(GameHubPath);
             });
+#else
+            // How to use SignalR
+            app.UseSignalR(routes =>
+            {
+                routes.MapHub<GameHub>(GameHubPath);
+            });
+#endif
 
             app.UseMvc();
         }

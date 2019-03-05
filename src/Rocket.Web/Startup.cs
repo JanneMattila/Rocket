@@ -19,14 +19,11 @@ namespace Rocket.Web
 
         public static HubRouteBuilder HubRoutes { get; private set; }
 
-        public Startup(IHostingEnvironment env)
+        private readonly ILogger _logger;
+        public Startup(IConfiguration configuration, ILogger<Startup> logger)
         {
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-                .AddEnvironmentVariables();
-            Configuration = builder.Build();
+            Configuration = configuration;
+            _logger = logger;
         }
 
         public IConfiguration Configuration { get; }
@@ -34,6 +31,7 @@ namespace Rocket.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            _logger.LogInformation("Configuring services");
             services.AddSignalR(options =>
             {
                 // Faster pings for testing
@@ -49,11 +47,6 @@ namespace Rocket.Web
 #endif
             ;
 
-            services.AddLogging(loggingBuilder =>
-            {
-                loggingBuilder.AddFile(Configuration.GetSection("Logging"));
-            });
-
             services.AddApplicationInsightsTelemetry();
 
             services.AddTransient<ITime, Time>();
@@ -62,11 +55,14 @@ namespace Rocket.Web
             services.AddSingleton<GameHubShared>();
             services.AddSingleton<Microsoft.Extensions.Hosting.IHostedService, GameEngineBackgroundService>();
             services.AddMvc();
+
+            _logger.LogInformation("Configuring services completed.");
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
+            _logger.LogInformation("Configuring");
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -75,8 +71,6 @@ namespace Rocket.Web
             {
                 app.UseExceptionHandler(ErrorHandlingPath);
             }
-
-            loggerFactory.AddApplicationInsights(app.ApplicationServices, LogLevel.Information);
 
             app.UseStaticFiles();
 
@@ -95,6 +89,8 @@ namespace Rocket.Web
 #endif
 
             app.UseMvc();
+
+            _logger.LogInformation("Configure completed.");
         }
     }
 }

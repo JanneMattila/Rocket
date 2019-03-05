@@ -20,12 +20,12 @@
 
         public static class MovementConstantValues
         {
-            public const double AccelerationRate = 100;
-            public const double DeAccelerationRate = 150;
+            public const double AccelerationRate = 80;
+            public const double DeAccelerationRate = 120;
             public const double BrakeRate = 5;
             public const double TurnRate = 4;
 
-            public const double MaxSpeedPerSecond = 600;
+            public const double MaxSpeedPerSecond = 300;
         }
 
         public static class ShootingConstantValues

@@ -29,7 +29,7 @@ namespace Rocket
 
         internal ConcurrentDictionary<string, PlayerMetadata> Players => _players;
 
-        internal Constant _gameEngineConstants;
+        internal Constant GameEngineConstants;
 
         public GameEngine(ILoggerFactory loggerFactory, ITime time, IRandomGenerator random)
         {
@@ -37,7 +37,7 @@ namespace Rocket
             _time = time;
             _random = random;
 
-            _gameEngineConstants = new Constant();
+            GameEngineConstants = new Constant();
         }
 
         public IEnumerable<PlayerMetadata> GetPlayers(Func<PlayerMetadata, bool> predicate)
@@ -83,7 +83,7 @@ namespace Rocket
                     throw new ArgumentException($"Duplicate value '{connectionId}' found for parameter {nameof(connectionId)}.");
                 });
 
-                return Tuple.Create(playerMetadata, _gameEngineConstants);
+                return Tuple.Create(playerMetadata, GameEngineConstants);
             }
         }
 

@@ -9,6 +9,5 @@
         public const int UpdatePlayerDebug = 2001;
 
         public const int GameEngineBackgroundServiceDebug = 2100;
-
     }
 }

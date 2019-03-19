@@ -7,7 +7,7 @@ pool:
   vmImage: 'Ubuntu 16.04'
 
 variables:
-  imageName: 'jannemattila/rocket'
+  imageName: 'jannemattila/rocket:$(Build.BuildNumber)'
 
 name: 1.0.$(Rev:r)
 steps:
@@ -15,6 +15,7 @@ steps:
   displayName: 'Build an image'
   inputs:
     imageName: $(imageName)
+    includeLatestTag: true
 - task: Docker@1
   displayName: 'Push an image'
   inputs:
@@ -22,3 +23,4 @@ steps:
     dockerRegistryEndpoint: DockerHub
     command: 'Push an image'
     imageName: $(imageName)
+    includeLatestTag: true
